@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Password Generator</title>
+  <meta name="description" content="Free, open-source generator for strong passwords, passphrases and PINs. Runs entirely in your browser: nothing is sent anywhere.">
+  <meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/theme.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.6"/></svg>
+      <span>Password Generator</span>
+    </div>
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Switch to dark theme" title="Toggle theme">
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </header>
+
+  <main class="container">
+    <div class="intro">
+      <h1>Generate a strong password</h1>
+      <p>Random, private, and created right in your browser. Nothing you generate is sent anywhere.</p>
+    </div>
+
+    <section class="card generator" aria-label="Generator">
+      <div class="tabs" role="tablist" aria-label="What to generate">
+        <button type="button" role="tab" id="tab-password" data-mode="password" aria-controls="panel-password" aria-selected="true">Password</button>
+        <button type="button" role="tab" id="tab-passphrase" data-mode="passphrase" aria-controls="panel-passphrase" aria-selected="false" tabindex="-1">Passphrase</button>
+        <button type="button" role="tab" id="tab-pin" data-mode="pin" aria-controls="panel-pin" aria-selected="false" tabindex="-1">PIN</button>
+      </div>
+
+      <div class="output" id="output">
+        <output id="result" class="result" aria-label="Generated value"></output>
+        <div class="output-actions">
+          <button id="regenerate" class="icon-btn icon-btn-lg" type="button" aria-label="Generate a new one" title="Generate a new one">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 3v5h5"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 21v-5h-5"/></svg>
+          </button>
+          <button id="copy" class="btn btn-primary" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg>
+            <span id="copy-label">Copy</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="strength" id="strength" data-score="0">
+        <div class="meter" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        <p class="strength-text" aria-live="polite">
+          <strong id="strength-label">–</strong>
+          <span id="strength-detail"></span>
+        </p>
+      </div>
+
+      <!-- Password options -->
+      <div class="panel" id="panel-password" role="tabpanel" aria-labelledby="tab-password">
+        <div class="field">
+          <div class="field-head">
+            <label for="pw-length-range">Length</label>
+            <input class="num" type="number" id="pw-length" inputmode="numeric" aria-label="Password length">
+          </div>
+          <input type="range" id="pw-length-range" class="range">
+        </div>
+
+        <fieldset class="group">
+          <legend>Characters</legend>
+          <label class="toggle"><input type="checkbox" id="pw-upper"><span class="switch" aria-hidden="true"></span><span class="toggle-text">Uppercase <small>A–Z</small></span></label>
+          <label class="toggle"><input type="checkbox" id="pw-lower"><span class="switch" aria-hidden="true"></span><span class="toggle-text">Lowercase <small>a–z</small></span></label>
+          <label class="toggle"><input type="checkbox" id="pw-digits"><span class="switch" aria-hidden="true"></span><span class="toggle-text">Numbers <small>0–9</small></span></label>
+          <label class="toggle"><input type="checkbox" id="pw-symbols"><span class="switch" aria-hidden="true"></span><span class="toggle-text">Symbols <small id="pw-symbols-preview">!@#$%^&amp;*</small></span></label>
+          <label class="toggle"><input type="checkbox" id="pw-ambiguous"><span class="switch" aria-hidden="true"></span><span class="toggle-text">Avoid ambiguous characters <small>0 O 1 l I |</small></span></label>
+        </fieldset>
+
+        <details class="advanced">
+          <summary>Advanced options</summary>
+          <div class="advanced-body">
+            <div class="row-2">
+              <div class="field-inline">
+                <label for="pw-min-digits">Minimum numbers</label>
+                <input class="num" type="number" id="pw-min-digits" inputmode="numeric">
+              </div>
+              <div class="field-inline">
+                <label for="pw-min-symbols">Minimum symbols</label>
+                <input class="num" type="number" id="pw-min-symbols" inputmode="numeric">
+              </div>
+            </div>
+            <div class="field-text">
+              <label for="pw-symbol-set">Symbols to use</label>
+              <input type="text" id="pw-symbol-set" class="text mono" spellcheck="false" autocomplete="off" autocapitalize="off">
+              <p class="hint">Some sites only accept certain symbols. Edit this list to match.</p>
+            </div>
+            <div class="field-text">
+              <label for="pw-exclude">Never use these characters</label>
+              <input type="text" id="pw-exclude" class="text mono" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="e.g. &quot;'`\">
+            </div>
+            <button type="button" id="pw-reset" class="btn btn-ghost btn-sm">Reset to defaults</button>
+          </div>
+        </details>
+      </div>
+
+      <!-- Passphrase options -->
+      <div class="panel" id="panel-passphrase" role="tabpanel" aria-labelledby="tab-passphrase" hidden>
+        <div class="field">
+          <div class="field-head">
+            <label for="pp-words-range">Number of words</label>
+            <input class="num" type="number" id="pp-words" inputmode="numeric" aria-label="Number of words">
+          </div>
+          <input type="range" id="pp-words-range" class="range">
+        </div>
+
+        <div class="field-select">
+          <label for="pp-separator">Separator</label>
+          <div class="select-wrap">
+            <select id="pp-separator">
+              <option value="hyphen">Hyphen ( - )</option>
+              <option value="space">Space</option>
+              <option value="period">Period ( . )</option>
+              <option value="comma">Comma ( , )</option>
+              <option value="underscore">Underscore ( _ )</option>
+              <option value="none">None</option>
+              <option value="digits">Random numbers</option>
+              <option value="digitsSymbols">Random numbers &amp; symbols</option>
+            </select>
+          </div>
+        </div>
+
+        <fieldset class="group">
+          <legend>Options</legend>
+          <label class="toggle"><input type="checkbox" id="pp-capitalize"><span class="switch" aria-hidden="true"></span><span class="toggle-text">Capitalize words</span></label>
+          <label class="toggle"><input type="checkbox" id="pp-number"><span class="switch" aria-hidden="true"></span><span class="toggle-text">Include a number</span></label>
+        </fieldset>
+      </div>
+
+      <!-- PIN options -->
+      <div class="panel" id="panel-pin" role="tabpanel" aria-labelledby="tab-pin" hidden>
+        <div class="field">
+          <div class="field-head">
+            <label for="pin-length-range">Length</label>
+            <input class="num" type="number" id="pin-length" inputmode="numeric" aria-label="PIN length">
+          </div>
+          <input type="range" id="pin-length-range" class="range">
+        </div>
+        <p class="hint">PINs are only safe where attempts are limited, like a phone or bank card that locks after a few wrong tries. Never use one as an account password.</p>
+      </div>
+    </section>
+
+    <section class="card history" aria-labelledby="history-title">
+      <div class="history-head">
+        <h2 id="history-title">Copied this session</h2>
+        <button type="button" id="history-clear" class="btn btn-ghost btn-sm" hidden>Clear</button>
+      </div>
+      <p class="hint" id="history-empty">Values you copy appear here so you can find them again. The list lives only in this tab's memory and is gone when you close or reload the page.</p>
+      <ol class="history-list" id="history-list"></ol>
+    </section>
+
+    <section class="info" aria-label="About">
+      <div class="info-item">
+        <h3>Private by design</h3>
+        <p>Everything is generated on your device with the browser's cryptographic random number generator. There are no network requests, analytics, cookies or third-party scripts.</p>
+      </div>
+      <div class="info-item">
+        <h3>Password or passphrase?</h3>
+        <p>Random passwords give the most strength per character and suit a password manager. Passphrases are easier to type and remember; five or more words is strong.</p>
+      </div>
+      <div class="info-item">
+        <h3>How strength is measured</h3>
+        <p>Strength is based on how the value was generated, not how it looks. Crack times assume an offline attacker trying 10 billion guesses per second.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Passphrase words come from the <a href="https://www.eff.org/dice" rel="noopener noreferrer">EFF Long Wordlist</a> (CC BY 3.0 US). Your settings are saved in this browser; generated values never are.</p>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/js/wordlist.js"></script>
+  <script src="assets/js/generator.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
