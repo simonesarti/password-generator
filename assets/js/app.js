@@ -88,6 +88,8 @@
     el.setAttribute('aria-valuemin', String(min));
     el.setAttribute('aria-valuemax', String(max));
     el.setAttribute('aria-valuenow', String(settings[b.mode][b.key]));
+    const hint = $(b.id + '-hint');
+    if (hint) hint.textContent = `${min}–${max}`;
     if (b.range) {
       const r = $(b.range);
       r.min = String(min);
@@ -112,7 +114,31 @@
     if (p.lower) parts.push('1 lowercase');
     if (p.digits) parts.push(n(p.minDigits, 'number'));
     if (p.symbols) parts.push(n(p.minSymbols, 'symbol'));
-    note.textContent = `Minimum ${min} to fit the required characters: ${parts.join(', ')}.`;
+    const summary = `Minimum ${min} to fit the required characters: ${parts.join(', ')}.`;
+    if (note.dataset.summary === summary) return; // unchanged: don't re-announce
+    note.dataset.summary = summary;
+    const link = document.createElement('button');
+    link.type = 'button';
+    link.className = 'link-btn';
+    link.textContent = 'Advanced options';
+    link.addEventListener('click', openAdvancedMinimums);
+    note.replaceChildren(
+      `${summary} You can lower the minimums in `,
+      link,
+      '.'
+    );
+  }
+
+  // Open the Advanced section and put the cursor in the first enabled minimum.
+  function openAdvancedMinimums() {
+    const details = document.querySelector('#panel-password .advanced');
+    details.open = true;
+    const target = ['pw-min-digits', 'pw-min-symbols'].map($).find((el) => !el.disabled);
+    details.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (target) {
+      target.focus({ preventScroll: true });
+      target.select();
+    }
   }
 
   // Keep only digits and drop leading zeros ("045" -> "45", "0" -> "").

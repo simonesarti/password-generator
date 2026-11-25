@@ -318,6 +318,20 @@ label, legend { font-weight: 600; }
 }
 .range-note { margin-top: 6px; }
 
+.link-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.link-btn:hover { color: var(--accent-hover); }
+
+.label-hint { margin-left: 4px; color: var(--muted); font-weight: 400; font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+
 .range {
   --fill: 50%;
   -webkit-appearance: none;
