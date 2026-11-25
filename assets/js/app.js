@@ -74,6 +74,23 @@
 
   const clamp = (n, [min, max]) => Math.min(max, Math.max(min, n));
 
+  // Password length can't go below the sum of the per-type minimums.
+  function limitsFor(b) {
+    if (b.id === 'pw-length') {
+      return [PWG.minPasswordLength(settings.password), b.limits[1]];
+    }
+    return b.limits;
+  }
+
+  function applyLimits(b) {
+    const [min, max] = limitsFor(b);
+    [$(b.id), b.range && $(b.range)].filter(Boolean).forEach((input) => {
+      input.min = String(min);
+      input.max = String(max);
+      input.step = '1';
+    });
+  }
+
   function setRangeFill(rangeEl) {
     const min = Number(rangeEl.min);
     const max = Number(rangeEl.max);
@@ -85,6 +102,7 @@
     BINDINGS.forEach((b) => {
       const el = $(b.id);
       const value = settings[b.mode][b.key];
+      if (b.limits) applyLimits(b);
       if (b.type === 'bool') el.checked = value;
       else el.value = String(value);
       if (b.range) {
@@ -112,14 +130,6 @@
       const el = $(b.id);
       el.setAttribute('autocomplete', 'off');
 
-      if (b.limits) {
-        [el, b.range && $(b.range)].filter(Boolean).forEach((input) => {
-          input.min = String(b.limits[0]);
-          input.max = String(b.limits[1]);
-          input.step = '1';
-        });
-      }
-
       if (b.type === 'bool') {
         el.addEventListener('change', () => {
           if (b.charType && !el.checked) {
@@ -140,8 +150,14 @@
             if (strict) renderControls();
             return;
           }
-          const clamped = clamp(n, b.limits);
+          const clamped = clamp(n, limitsFor(b));
           if (!strict && clamped !== n) return; // still typing, e.g. "1" on the way to "16"
+          if (clamped === settings[b.mode][b.key]) {
+            // Nothing changed (e.g. slider pushed past its limit): snap the
+            // controls back, but keep the current value instead of regenerating.
+            if (strict) renderControls();
+            return;
+          }
           settings[b.mode][b.key] = clamped;
           onChange();
         };

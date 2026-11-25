@@ -156,6 +156,16 @@
   }
 
   /**
+   * Shortest length the options allow: the length limit, or the sum of the
+   * per-type minimums if that is larger.
+   */
+  function minPasswordLength(opts) {
+    const pools = buildPools(normalizePasswordOptions(opts));
+    const required = pools.reduce((sum, p) => sum + p.min, 0);
+    return Math.max(LIMITS.passwordLength[0], required);
+  }
+
+  /**
    * Random password. Every enabled character type appears at least once
    * (numbers and symbols at least their configured minimum). If the minimums
    * add up to more than the requested length, the length is raised to fit.
@@ -297,6 +307,7 @@
 
   const api = Object.freeze({
     generatePassword,
+    minPasswordLength,
     generatePassphrase,
     generatePin,
     assessStrength,

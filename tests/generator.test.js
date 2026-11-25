@@ -138,3 +138,10 @@ test('strength scoring and crack time text', () => {
   assert.equal(PWG.formatDuration(3600 * 3), '3 hours');
   assert.equal(PWG.formatDuration(86400 * 365.25 * 5000), '5 thousand years');
 });
+
+test('minPasswordLength reflects per-type minimums', () => {
+  assert.equal(PWG.minPasswordLength({}), 5);
+  assert.equal(PWG.minPasswordLength({ minDigits: 5, minSymbols: 5 }), 12);
+  assert.equal(PWG.minPasswordLength({ minDigits: 9, minSymbols: 9, symbols: false }), 11);
+  assert.equal(PWG.minPasswordLength({ upper: false, lower: false, digits: false, symbols: false }), 5);
+});
