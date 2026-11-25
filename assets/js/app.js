@@ -84,12 +84,20 @@
 
   function applyLimits(b) {
     const [min, max] = limitsFor(b);
-    [$(b.id), b.range && $(b.range)].filter(Boolean).forEach((input) => {
-      input.min = String(min);
-      input.max = String(max);
-      input.step = '1';
-    });
+    const el = $(b.id);
+    el.setAttribute('aria-valuemin', String(min));
+    el.setAttribute('aria-valuemax', String(max));
+    el.setAttribute('aria-valuenow', String(settings[b.mode][b.key]));
+    if (b.range) {
+      const r = $(b.range);
+      r.min = String(min);
+      r.max = String(max);
+      r.step = '1';
+    }
   }
+
+  // Keep only digits and drop leading zeros ("045" -> "45", "0" -> "").
+  const cleanDigits = (s) => s.replace(/\D/g, '').replace(/^0+/, '');
 
   function setRangeFill(rangeEl) {
     const min = Number(rangeEl.min);
@@ -104,7 +112,7 @@
       const value = settings[b.mode][b.key];
       if (b.limits) applyLimits(b);
       if (b.type === 'bool') el.checked = value;
-      else el.value = String(value);
+      else if (el.value !== String(value)) el.value = String(value);
       if (b.range) {
         const r = $(b.range);
         r.value = String(value);
@@ -161,8 +169,26 @@
           settings[b.mode][b.key] = clamped;
           onChange();
         };
-        el.addEventListener('input', () => commit(el.value, false));
+        el.addEventListener('input', () => {
+          const cleaned = cleanDigits(el.value);
+          if (cleaned !== el.value) {
+            // Keep the caret where it was relative to the remaining digits.
+            const caret = cleanDigits(el.value.slice(0, el.selectionStart ?? el.value.length)).length;
+            el.value = cleaned;
+            el.setSelectionRange(caret, caret);
+          }
+          commit(cleaned, false);
+        });
         el.addEventListener('change', () => commit(el.value, true));
+        el.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            commit(el.value, true);
+          } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            const step = e.key === 'ArrowUp' ? 1 : -1;
+            commit(String(settings[b.mode][b.key] + step), true);
+          }
+        });
         if (b.range) {
           $(b.range).addEventListener('input', (e) => commit(e.target.value, true));
         }
