@@ -67,6 +67,8 @@
             <input class="num" type="text" id="pw-length" inputmode="numeric" pattern="[0-9]*" maxlength="3" role="spinbutton" spellcheck="false" aria-label="Password length">
           </div>
           <input type="range" id="pw-length-range" class="range">
+          <div class="range-scale" id="pw-length-range-scale" aria-hidden="true"><span></span><span></span></div>
+          <p class="hint range-note" id="pw-length-note" aria-live="polite" hidden></p>
         </div>
 
         <fieldset class="group">
@@ -113,6 +115,7 @@
             <input class="num" type="text" id="pp-words" inputmode="numeric" pattern="[0-9]*" maxlength="3" role="spinbutton" spellcheck="false" aria-label="Number of words">
           </div>
           <input type="range" id="pp-words-range" class="range">
+          <div class="range-scale" id="pp-words-range-scale" aria-hidden="true"><span></span><span></span></div>
         </div>
 
         <div class="field-select">
@@ -146,6 +149,7 @@
             <input class="num" type="text" id="pin-length" inputmode="numeric" pattern="[0-9]*" maxlength="3" role="spinbutton" spellcheck="false" aria-label="PIN length">
           </div>
           <input type="range" id="pin-length-range" class="range">
+          <div class="range-scale" id="pin-length-range-scale" aria-hidden="true"><span></span><span></span></div>
         </div>
         <p class="hint">PINs are only safe where attempts are limited, like a phone or bank card that locks after a few wrong tries. Never use one as an account password.</p>
       </div>

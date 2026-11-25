@@ -304,6 +304,16 @@ label, legend { font-weight: 600; }
 .num:focus-visible, .text:focus-visible, select:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--ring); }
 
 /* range */
+.range-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.range-note { margin-top: 6px; }
+
 .range {
   --fill: 50%;
   -webkit-appearance: none;

@@ -93,7 +93,26 @@
       r.min = String(min);
       r.max = String(max);
       r.step = '1';
+      const [minLabel, maxLabel] = $(b.range + '-scale').children;
+      minLabel.textContent = String(min);
+      maxLabel.textContent = String(max);
     }
+  }
+
+  // Explain why the password minimum is above the usual floor, if it is.
+  function renderLengthNote() {
+    const p = settings.password;
+    const min = PWG.minPasswordLength(p);
+    const note = $('pw-length-note');
+    note.hidden = min <= PWG.LIMITS.passwordLength[0];
+    if (note.hidden) return;
+    const n = (count, word) => `${count} ${word}${count === 1 ? '' : 's'}`;
+    const parts = [];
+    if (p.upper) parts.push('1 uppercase');
+    if (p.lower) parts.push('1 lowercase');
+    if (p.digits) parts.push(n(p.minDigits, 'number'));
+    if (p.symbols) parts.push(n(p.minSymbols, 'symbol'));
+    note.textContent = `Minimum ${min} to fit the required characters: ${parts.join(', ')}.`;
   }
 
   // Keep only digits and drop leading zeros ("045" -> "45", "0" -> "").
@@ -119,6 +138,7 @@
         setRangeFill(r);
       }
     });
+    renderLengthNote();
     const p = settings.password;
     $('pw-min-digits').disabled = !p.digits;
     $('pw-min-symbols').disabled = !p.symbols;
