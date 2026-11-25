@@ -69,13 +69,11 @@ To set this up again (for example on a fork), go to **Settings → Pages → Bui
 
 The empty `.nojekyll` file tells GitHub Pages to serve the files as they are, without running Jekyll.
 
-## Search engines
+## Maintenance notes
 
-`sitemap.xml` lists the site for crawlers. To get it indexed, add `https://simonesarti.github.io/password-generator/` as a **URL-prefix** property in [Google Search Console](https://search.google.com/search-console) and [Bing Webmaster Tools](https://www.bing.com/webmasters), then submit `https://simonesarti.github.io/password-generator/sitemap.xml`.
-
-There is no `robots.txt`: crawlers only read it from the root of a domain (`simonesarti.github.io/robots.txt`), not from a project subfolder, and without one everything may be crawled.
-
-When `index.html` changes significantly, update `<lastmod>` in `sitemap.xml`. When the list of site files changes, update `PRECACHE` in `sw.js` and bump its `CACHE` version.
+- When site files are added, removed or renamed, update `PRECACHE` in `sw.js` and bump its `CACHE` version, or the offline copy will be incomplete.
+- After significant content changes, update `<lastmod>` in `sitemap.xml`.
+- Keep `google110ebfc67e1bc614.html`: it verifies the site in Google Search Console, and removing it un-verifies the site.
 
 ## Project structure
 
@@ -86,6 +84,7 @@ favicon.svg
 manifest.webmanifest     web app manifest (installable app)
 sw.js                    service worker (offline support)
 sitemap.xml              sitemap for search engines
+google110ebfc67e1bc614.html  Google Search Console verification (keep)
 assets/og-image.png      1200×630 link-preview image
 assets/icons/            app icons (192, 512, maskable, Apple touch)
 assets/css/style.css     styles (light/dark themes)
