@@ -516,4 +516,11 @@
   }
 
   init();
+
+  // Offline support: cache the site so it keeps working without a connection.
+  if ('serviceWorker' in navigator && window.isSecureContext) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => { /* offline mode is optional */ });
+    });
+  }
 })();

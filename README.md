@@ -30,6 +30,7 @@ The options follow what Bitwarden, 1Password and LastPass offer.
 - Numbers and symbols are colour-coded so similar-looking characters are easy to tell apart
 - One-click copy, plus a list of values copied this session (kept in memory only)
 - Light and dark themes, responsive layout, keyboard-accessible tabs and toggles
+- Works offline and can be installed as an app (web app manifest + service worker)
 - Your settings are remembered in `localStorage`. Generated values are never stored.
 
 ## Security
@@ -37,7 +38,8 @@ The options follow what Bitwarden, 1Password and LastPass offer.
 - Randomness comes from `crypto.getRandomValues` (Web Crypto CSPRNG). Rejection sampling removes modulo bias.
 - Every enabled character type is guaranteed to appear at least once, and the characters are then shuffled with Fisher–Yates.
 - Entropy is calculated from how the value was generated (pool size, word count), not from how it looks.
-- A strict Content Security Policy is set: only same-origin scripts and styles, and no network connections.
+- A strict Content Security Policy is set: only same-origin scripts, styles, manifest and service worker, and no network connections from the page.
+- The service worker only caches the site's own files, network-first, so online visitors always get the latest version.
 - No analytics, cookies, fonts, CDNs or other third-party requests.
 
 ## Run locally
@@ -67,11 +69,24 @@ To set this up again (for example on a fork), go to **Settings → Pages → Bui
 
 The empty `.nojekyll` file tells GitHub Pages to serve the files as they are, without running Jekyll.
 
+## Search engines
+
+`sitemap.xml` lists the site for crawlers. To get it indexed, add `https://simonesarti.github.io/password-generator/` as a **URL-prefix** property in [Google Search Console](https://search.google.com/search-console) and [Bing Webmaster Tools](https://www.bing.com/webmasters), then submit `https://simonesarti.github.io/password-generator/sitemap.xml`.
+
+There is no `robots.txt`: crawlers only read it from the root of a domain (`simonesarti.github.io/robots.txt`), not from a project subfolder, and without one everything may be crawled.
+
+When `index.html` changes significantly, update `<lastmod>` in `sitemap.xml`. When the list of site files changes, update `PRECACHE` in `sw.js` and bump its `CACHE` version.
+
 ## Project structure
 
 ```
-index.html               page markup
+index.html               page markup, SEO and link-preview tags, structured data
 favicon.svg
+manifest.webmanifest     web app manifest (installable app)
+sw.js                    service worker (offline support)
+sitemap.xml              sitemap for search engines
+assets/og-image.png      1200×630 link-preview image
+assets/icons/            app icons (192, 512, maskable, Apple touch)
 assets/css/style.css     styles (light/dark themes)
 assets/js/theme.js       applies the saved theme before first paint
 assets/js/wordlist.js    EFF Long Wordlist

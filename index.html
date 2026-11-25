@@ -3,13 +3,61 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="no-referrer">
-  <title>Password Generator</title>
-  <meta name="description" content="Free, open-source generator for strong passwords, passphrases and PINs. Runs entirely in your browser: nothing is sent anywhere.">
+  <title>Password &amp; Passphrase Generator – Free, Private, Offline</title>
+  <meta name="description" content="Generate strong passwords, passphrases and PINs right in your browser. Free and open source, no tracking, works offline: nothing you generate leaves your device.">
+  <link rel="canonical" href="https://simonesarti.github.io/password-generator/">
+
+  <!-- Link previews (Open Graph / X) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Password Generator">
+  <meta property="og:title" content="Password &amp; Passphrase Generator – Free, Private, Offline">
+  <meta property="og:description" content="Strong passwords, passphrases and PINs generated in your browser. Free, open source, no tracking, works offline.">
+  <meta property="og:url" content="https://simonesarti.github.io/password-generator/">
+  <meta property="og:image" content="https://simonesarti.github.io/password-generator/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Password Generator: strong passwords, generated privately. Free and open source, no tracking, works offline.">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- App / icons -->
   <meta name="theme-color" content="#f5f6f8" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0f1115" media="(prefers-color-scheme: dark)">
+  <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/icons/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="Passwords">
+
+  <!-- Structured data for search engines (data only, never executed) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Password Generator",
+    "alternateName": "Password & Passphrase Generator",
+    "url": "https://simonesarti.github.io/password-generator/",
+    "description": "Free, open-source generator for strong passwords, passphrases and PINs. Runs entirely in the browser with no tracking and works offline.",
+    "image": "https://simonesarti.github.io/password-generator/assets/og-image.png",
+    "applicationCategory": "SecurityApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript and a modern web browser",
+    "isAccessibleForFree": true,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": [
+      "Random passwords from 8 to 128 characters",
+      "Passphrases from the EFF long wordlist",
+      "Numeric PINs",
+      "Strength meter with estimated crack time",
+      "Works offline and can be installed as an app",
+      "No tracking, cookies or third-party scripts"
+    ],
+    "sameAs": ["https://github.com/simonesarti/password-generator"]
+  }
+  </script>
+
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="assets/js/theme.js"></script>
 </head>
@@ -163,19 +211,43 @@
       <ol class="history-list" id="history-list"></ol>
     </section>
 
-    <section class="info" aria-label="About">
-      <div class="info-item">
-        <h3>Private by design</h3>
-        <p>Everything is generated on your device with the browser's cryptographic random number generator. There are no network requests, analytics, cookies or third-party scripts.</p>
-      </div>
-      <div class="info-item">
-        <h3>Password or passphrase?</h3>
-        <p>Random passwords give the most strength per character and suit a password manager. Passphrases are easier to type and remember; five or more words is strong.</p>
-      </div>
-      <div class="info-item">
-        <h3>How strength is measured</h3>
-        <p>Strength is based on how the value was generated, not how it looks. Crack times assume an offline attacker trying 10 billion guesses per second.</p>
-      </div>
+    <section class="card faq" aria-labelledby="faq-title">
+      <h2 id="faq-title">Questions</h2>
+
+      <details class="faq-item">
+        <summary>Is it safe to generate a password on a website?</summary>
+        <p>Here, yes. Every value is created on your device by your browser's cryptographic random number generator and never leaves it. The page has no analytics, cookies or third-party scripts, and its security policy blocks it from connecting to any server. You can check by turning off your internet connection, or by reading the <a href="https://github.com/simonesarti/password-generator" rel="noopener noreferrer">source code</a>.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Are my passwords saved anywhere?</summary>
+        <p>No. Only your settings are remembered, in this browser. Values you copy are listed under "Copied this session" until you close or reload the page, and are never written to storage.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Does it work offline?</summary>
+        <p>Yes. After your first visit your browser keeps a copy of the page, so it works without a connection. You can also install it as an app: use "Add to Home Screen" on your phone, or the install icon in your browser's address bar.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Should I use a password or a passphrase?</summary>
+        <p>Use a random password for accounts saved in a password manager: it packs the most strength into each character. Use a passphrase for things you have to remember or type, like your password manager's master password or your computer login.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary>How long should my password be?</summary>
+        <p>A random password of 16 or more characters, or a passphrase of 5 or more words, is strong for almost anything. If a site limits length or symbols, change the options to match its rules; the strength meter shows how much protection you keep.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary>How is strength calculated?</summary>
+        <p>From how the value was generated, not how it looks: how many characters or words were possible and how many were picked, measured in bits. Crack times assume an attacker trying 10 billion guesses per second against a stolen password database.</p>
+      </details>
+
+      <details class="faq-item">
+        <summary>Is it free?</summary>
+        <p>Yes, with no ads, accounts or limits. It's open source on <a href="https://github.com/simonesarti/password-generator" rel="noopener noreferrer">GitHub</a>.</p>
+      </details>
     </section>
   </main>
 
