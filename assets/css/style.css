@@ -299,6 +299,10 @@ label, legend { font-weight: 600; }
 }
 .num { width: 76px; text-align: center; font-variant-numeric: tabular-nums; font-weight: 600; }
 .num:disabled, .text:disabled { opacity: 0.5; }
+.num.is-refused { animation: refuse 0.6s ease-out; }
+@keyframes refuse {
+  0%, 40% { border-color: var(--s0); box-shadow: 0 0 0 3px color-mix(in srgb, var(--s0) 30%, transparent); }
+}
 .text { width: 100%; }
 .mono { font-family: var(--mono); letter-spacing: 0.04em; }
 .num:focus-visible, .text:focus-visible, select:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--ring); }
@@ -439,7 +443,7 @@ select { -webkit-appearance: none; appearance: none; padding-right: 36px; min-wi
 .advanced[open] summary::after { transform: rotate(-135deg); }
 .advanced-body { padding: 4px 14px 16px; display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
 
-.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
+.row-2 { display: grid; grid-template-columns: 1fr; gap: 12px; width: 100%; }
 .field-inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.95rem; }
 .field-inline label { font-weight: 500; }
 .field-text { display: flex; flex-direction: column; gap: 6px; width: 100%; }
@@ -499,7 +503,6 @@ select { -webkit-appearance: none; appearance: none; padding-right: 36px; min-wi
   .output-actions { justify-content: center; }
   .output-actions .btn-primary { flex: 1; }
   .info { grid-template-columns: 1fr; }
-  .row-2 { grid-template-columns: 1fr; }
   .field-select { flex-direction: column; align-items: stretch; }
   .select-wrap select { width: 100%; min-width: 0; }
 }

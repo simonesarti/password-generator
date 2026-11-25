@@ -118,6 +118,13 @@
   // Keep only digits and drop leading zeros ("045" -> "45", "0" -> "").
   const cleanDigits = (s) => s.replace(/\D/g, '').replace(/^0+/, '');
 
+  // Briefly flash the field's border to show a keystroke was refused.
+  function flagRefused(el) {
+    el.classList.remove('is-refused');
+    void el.offsetWidth; // restart the animation
+    el.classList.add('is-refused');
+  }
+
   function setRangeFill(rangeEl) {
     const min = Number(rangeEl.min);
     const max = Number(rangeEl.max);
@@ -189,11 +196,32 @@
           settings[b.mode][b.key] = clamped;
           onChange();
         };
-        el.addEventListener('input', () => {
-          const cleaned = cleanDigits(el.value);
+        // Snapshot the field before each edit so an over-the-limit
+        // keystroke can be undone exactly.
+        let before = null;
+        el.addEventListener('beforeinput', () => {
+          before = { value: el.value, start: el.selectionStart, end: el.selectionEnd };
+        });
+        el.addEventListener('input', (e) => {
+          let cleaned = cleanDigits(el.value);
+          // Keep the caret where it was relative to the remaining digits.
+          let caret = cleanDigits(el.value.slice(0, el.selectionStart ?? el.value.length)).length;
+          const max = limitsFor(b)[1];
+          if (cleaned !== '' && Number(cleaned) > max) {
+            const pasted = e.inputType === 'insertFromPaste' || e.inputType === 'insertFromDrop';
+            if (pasted || !before) {
+              // Pasting a too-large number gives the maximum.
+              cleaned = String(max);
+              caret = cleaned.length;
+            } else {
+              // Typing can only make the number bigger, so refuse the keystroke.
+              el.value = before.value;
+              el.setSelectionRange(before.start, before.end);
+              flagRefused(el);
+              return;
+            }
+          }
           if (cleaned !== el.value) {
-            // Keep the caret where it was relative to the remaining digits.
-            const caret = cleanDigits(el.value.slice(0, el.selectionStart ?? el.value.length)).length;
             el.value = cleaned;
             el.setSelectionRange(caret, caret);
           }
