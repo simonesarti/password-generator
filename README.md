@@ -10,7 +10,7 @@ A fast, private password generator that runs entirely in the browser. It's a sta
 The options follow what Bitwarden, 1Password and LastPass offer.
 
 **Password**
-- Length 5–128 (slider or typed)
+- Length 8–128 (slider or typed)
 - Uppercase, lowercase, numbers, symbols
 - Avoid ambiguous characters (`0 O 1 l I |`)
 - Minimum numbers and minimum symbols

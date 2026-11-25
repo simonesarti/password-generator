@@ -30,7 +30,7 @@
   });
 
   const LIMITS = Object.freeze({
-    passwordLength: [5, 128],
+    passwordLength: [8, 128],
     minCount: [1, 9],
     words: [3, 20],
     pinLength: [4, 12],

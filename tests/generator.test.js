@@ -79,7 +79,8 @@ test('custom symbol set is used exclusively', () => {
 });
 
 test('length limits are enforced', () => {
-  assert.equal(PWG.generatePassword({ length: 1 }).value.length, 5);
+  assert.equal(PWG.generatePassword({ length: 1 }).value.length, 8);
+  assert.equal(PWG.generatePassword({ length: 7 }).value.length, 8);
   assert.equal(PWG.generatePassword({ length: 999 }).value.length, 128);
   assert.equal(PWG.generatePassword({ length: 'abc' }).value.length, 20);
 });
@@ -140,8 +141,8 @@ test('strength scoring and crack time text', () => {
 });
 
 test('minPasswordLength reflects per-type minimums', () => {
-  assert.equal(PWG.minPasswordLength({}), 5);
+  assert.equal(PWG.minPasswordLength({}), 8);
   assert.equal(PWG.minPasswordLength({ minDigits: 5, minSymbols: 5 }), 12);
   assert.equal(PWG.minPasswordLength({ minDigits: 9, minSymbols: 9, symbols: false }), 11);
-  assert.equal(PWG.minPasswordLength({ upper: false, lower: false, digits: false, symbols: false }), 5);
+  assert.equal(PWG.minPasswordLength({ upper: false, lower: false, digits: false, symbols: false }), 8);
 });
