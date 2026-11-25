@@ -80,6 +80,7 @@ When `index.html` changes significantly, update `<lastmod>` in `sitemap.xml`. Wh
 ## Project structure
 
 ```
+LICENSE                  MIT license (code)
 index.html               page markup, SEO and link-preview tags, structured data
 favicon.svg
 manifest.webmanifest     web app manifest (installable app)
@@ -95,6 +96,8 @@ assets/js/app.js         UI wiring
 tests/                   Node unit tests for generator.js
 ```
 
-## Credits
+## License
 
-The passphrase word list is the [EFF Long Wordlist](https://www.eff.org/dice) by the Electronic Frontier Foundation, licensed under [CC BY 3.0 US](https://creativecommons.org/licenses/by/3.0/us/).
+The code is released under the [MIT License](LICENSE).
+
+The passphrase word list in `assets/js/wordlist.js` is **not** covered by the MIT License. It is the [EFF Long Wordlist](https://www.eff.org/dice) by the Electronic Frontier Foundation, licensed under [CC BY 3.0 US](https://creativecommons.org/licenses/by/3.0/us/). Changes from the original: the dice numbers were removed and the words were converted to a JavaScript array.
