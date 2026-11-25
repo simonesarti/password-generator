@@ -1,6 +1,9 @@
 # Password Generator
 
-A fast, private password generator that runs entirely in the browser. It's a static site with no build step and no dependencies, so it's ready for GitHub Pages.
+A fast, private password generator that runs entirely in the browser. It's a static site with no build step and no dependencies, hosted on GitHub Pages.
+
+- **Live site:** [simonesarti.github.io/password-generator](https://simonesarti.github.io/password-generator/)
+- **Repository:** [github.com/simonesarti/password-generator](https://github.com/simonesarti/password-generator)
 
 ## Features
 
@@ -39,9 +42,11 @@ The options follow what Bitwarden, 1Password and LastPass offer.
 
 ## Run locally
 
-Open `index.html` directly, or serve the folder:
+Clone the repository, then open `index.html` directly or serve the folder:
 
 ```sh
+git clone git@github.com:simonesarti/password-generator.git
+cd password-generator
 python3 -m http.server 8000
 # then open http://localhost:8000
 ```
@@ -54,18 +59,11 @@ The generator logic (`assets/js/generator.js`) has no DOM dependencies and is te
 node --test tests/*.test.js
 ```
 
-## Deploy to GitHub Pages
+## Deployment
 
-```sh
-git init
-git add .
-git commit -m "Password generator"
-git branch -M main
-git remote add origin https://github.com/<your-username>/<repo-name>.git
-git push -u origin main
-```
+The site is served by GitHub Pages from the root of the `main` branch, at [simonesarti.github.io/password-generator](https://simonesarti.github.io/password-generator/). Every push to `main` redeploys it automatically, usually within a minute or two.
 
-Then, in the repository on GitHub: **Settings → Pages → Build and deployment → Source: Deploy from a branch**, select `main` and `/ (root)`, and click **Save**. The site will be live at `https://<your-username>.github.io/<repo-name>/` within a minute or two.
+To set this up again (for example on a fork), go to **Settings → Pages → Build and deployment** in the repository, set **Source** to "Deploy from a branch", select `main` and `/ (root)`, and click **Save**.
 
 The empty `.nojekyll` file tells GitHub Pages to serve the files as they are, without running Jekyll.
 
